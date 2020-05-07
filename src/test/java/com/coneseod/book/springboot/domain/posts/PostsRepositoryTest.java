@@ -2,6 +2,7 @@ package com.coneseod.book.springboot.domain.posts;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.After;
 import org.junit.Test;
@@ -41,5 +42,24 @@ public class PostsRepositoryTest {
     Posts posts = postsList.get(0);
     assertThat(posts.getTitle()).isEqualTo(title);
     assertThat(posts.getContent()).isEqualTo(content);
+  }
+
+  @Test
+  public void BaseTimeEntity_등록(){
+    //given
+    LocalDateTime now = LocalDateTime.of(2020,5,8,8,0,0);
+    Posts save = postsRepository
+        .save(Posts.builder().author("coneseod").content("content").title("title").build());
+
+    //when
+    List<Posts> postsList = postsRepository.findAll();
+
+    //then
+    Posts posts = postsList.get(0);
+
+    System.out.println(">>>>>>>>>>> createDate="+posts.getCreatedDate()+"modifiedDate="+posts.getModifiedDate());
+
+    assertThat(posts.getCreatedDate()).isAfter(now);
+    assertThat(posts.getModifiedDate()).isAfter(now);
   }
 }
